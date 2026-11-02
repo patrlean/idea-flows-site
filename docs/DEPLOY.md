@@ -6,15 +6,15 @@ This template contains the website, Worker API, R2-backed board, and MCP tools. 
 
 Copy this into a Codex/ChatGPT Work chat with **Sites** available (and GitHub access if needed):
 
-> @Sites Use https://github.com/patrlean/idea-flows-site as the template for my own Idea Flows site. Read its AGENTS.md and docs/DEPLOY.md, retain the existing UI and five project states, and create a new owner-private Site with its own storage and deployment ID. Use an empty board. Ask only for any missing account connection or essential branding choice; otherwise use the template defaults. Run its checks, publish through Sites, verify the actual URL and MCP tools, and return my Site link. Do not reuse anyone else's Site identity, personal data, or credentials.
+> @Sites Use https://github.com/patrlean/idea-flows-site as the template for my own Idea Flows site. Read its AGENTS.md and docs/DEPLOY.md, retain the existing UI and five project states, and create a new owner-private Site with its own storage and deployment ID. Use the English interface (`language: "en"`) and an empty board. Ask only for any missing account connection or essential branding choice; otherwise use the template defaults. Run its checks, publish through Sites, verify the actual URL and MCP tools, and return my Site link. Do not reuse anyone else's Site identity, personal data, or credentials.
 
 Sites availability depends on the account/workspace. See the [official Sites walkthrough](https://developers.openai.com/training/walkthroughs/building-a-shareable-site). This repository does not itself grant Sites hosting access. Creating a GitHub repository from the template does not automatically deploy a website.
 
 ## Local Codex path
 
 1. Click **Use this template → Create a new repository** on GitHub, or clone it directly. Open that folder in Codex.
-2. Optional: personalize `site.config.json` or run `npm run setup -- --title "My Ideas" --eyebrow "MY / IDEAS" --timezone "Asia/Shanghai"`.
-3. Run `npm run dev` to preview your empty board. Use `npm run demo` instead to preview fictional cards; the two commands use separate `.local/` state files.
+2. Optional: personalize `site.config.json` or run `npm run setup -- --title "My Ideas" --language en --timezone "UTC"`.
+3. Run `npm run dev` to preview your empty board. Use `npm run demo:en` or `npm run demo:zh` instead to preview localized fictional cards; the two commands use separate `.local/` state files.
 4. In that Codex chat, ask Sites to publish this repository using AGENTS.md. No separate model API key or npm dependencies are required for this application.
 
 ## Deployment contract for the publishing agent
@@ -70,4 +70,4 @@ MCP-only use needs no `IDEA_SYNC_SECRET`. The local dev server uses a loopback-o
 
 A Site is one shared board. Anyone permitted into it has the same board API permissions. Owner-private is the intended initial setting. This starter does not implement independent private boards for visitors to a shared/public Site; add an authorization/data-isolation model before offering that product.
 
-The authored UI copy is Simplified Chinese. Branding, heading text, date locale, and timezone are configurable; changing `locale` changes date formatting, not the UI's language. Edit `web/app.js` and `web/index.html` for other interface languages.
+The UI supports English (`en`) and Simplified Chinese (`zh-CN`) through `language` in `site.config.json`. New templates default to English; legacy configurations without a language keep Chinese. Built-in headings and descriptive copy follow the language unless explicitly overridden. `locale` changes date formatting only. Personal project content is never automatically translated.

@@ -7,11 +7,24 @@ Your own idea board, built and hosted with ChatGPT Sites.
 
 Keep ideas, research, work in progress, shipped projects, and archived directions in one editorial project index. Update cards from ChatGPT through the Site's own plugin, or connect the optional [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook) for selected local Codex projects.
 
+## Preview
+
+English interface with fictional demo projects. Screenshots are captured from the running app.
+
+![English Idea Flows board](assets/screenshots/overview.en.jpg)
+
+<details>
+<summary>Archive and restore</summary>
+
+![English archive drawer with restore controls](assets/screenshots/archive.en.jpg)
+
+</details>
+
 ## Start here
 
 **Ask Sites to build your copy.** Open a Codex or ChatGPT Work chat with Sites available, then paste:
 
-> @Sites Use https://github.com/patrlean/idea-flows-site as the template for my own Idea Flows site. Follow its AGENTS.md and docs/DEPLOY.md. Keep the existing UI, start with an empty board, create my own owner-private Site and storage, run the checks, and publish it. Return my verified Site URL and help connect its plugin. Do not reuse the template author's Site identity, data, or credentials.
+> @Sites Use https://github.com/patrlean/idea-flows-site as the template for my own Idea Flows site. Follow its AGENTS.md and docs/DEPLOY.md. Use the English interface (`language: "en"`), keep the existing layout, start with an empty board, create my own owner-private Site and storage, run the checks, and publish it. Return my verified Site URL and help connect its plugin. Do not reuse the template author's Site identity, data, or credentials.
 
 Or click **Use this template**, create your own repository, and open it in Codex. [Deployment guide →](docs/DEPLOY.md)
 
@@ -27,7 +40,7 @@ You need access to Sites in your own account/workspace. Creating a GitHub copy a
 - 🔌 **Optional Codex hook** — A secret-protected receiver compatible with the separate public hook.
 - 🧩 **A clean starting point** — No deployment ID, personal project catalog, chat history, or author credentials.
 
-The interface copy is Simplified Chinese. Branding, headings, date locale, and timezone are configurable; the English and Chinese documentation are separate.
+The interface supports English and Simplified Chinese. A fresh template defaults to English. UI language, branding, headings, date locale, and timezone are configurable; each README uses screenshots in its own language.
 
 ## Try it locally
 
@@ -42,7 +55,7 @@ npm run dev
 Open the loopback URL printed in the terminal. The board starts empty. To preview fictional cards instead, stop that server and run:
 
 ```sh
-npm run demo
+npm run demo:en
 ```
 
 Normal and demo data live in separate ignored `.local/` files. Deployment artifacts never include local/demo records. A newly provisioned Site starts empty; redeploying an existing Site preserves its hosted state.
@@ -50,18 +63,28 @@ Normal and demo data live in separate ignored `.local/` files. Deployment artifa
 ## Make it yours
 
 ```sh
-npm run setup -- --title 'My Ideas' --eyebrow 'MY / IDEAS' --timezone 'Asia/Shanghai'
+npm run setup -- --title 'My Ideas' --language en --timezone 'UTC'
 ```
 
-Or edit [site.config.json](site.config.json). Layout and interactions live in `web/`; API and MCP tools live in `worker/index.js`. Changing `locale` affects dates, not interface translation.
+Or edit [site.config.json](site.config.json). Layout and interactions live in `web/`; API and MCP tools live in `worker/index.js`. Set `language` to `en` or `zh-CN` to choose the interface language. `locale` affects only date formatting. Your own project content is never automatically translated.
 
 | File | Purpose |
 | --- | --- |
-| `site.config.json` | Name, description, index label, heading lines, locale, timezone. |
+| `site.config.json` | Name, UI language, optional custom copy, date locale, timezone. |
 | `.openai/hosting.json` | Sites storage/MCP declarations; your deployment ID is added only after registration. |
 | `AGENTS.md` | Instructions for the agent that creates and publishes your copy. |
 | `docs/DEPLOY.md` | Sites publishing, plugin connection, optional hook setup, and access boundaries. |
-| `examples/ideas.json` | Fictional data used only by the local demo server. |
+| `examples/ideas.en.json` / `examples/ideas.json` | English / Chinese fictional data used only by local demo servers. |
+
+### Reproduce the screenshots
+
+```sh
+npm run demo:en
+# Or, for the Chinese interface and demo content:
+npm run demo:zh
+```
+
+Each demo language has its own ignored local data file. Optional `heading`, `description`, `eyebrow`, and `locale` in `site.config.json` override translated defaults; explicit custom copy is kept as written.
 
 ## Publish with Sites
 

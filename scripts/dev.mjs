@@ -2,10 +2,14 @@ import http from 'node:http';
 import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 import {createHash,randomUUID} from 'node:crypto';
+import {parseArgs} from 'node:util';
+import {readConfig} from './config.mjs';
+const {values}=parseArgs({options:{language:{type:'string'},demo:{type:'boolean'}}});
+const {language}=await readConfig(process.cwd(),values.language);
 const module=await import(pathToFileURL(process.cwd()+'/dist/server/index.js'));
-const demo=process.argv.includes('--demo'),directory='.local';await mkdir(directory,{recursive:true});
-const file=directory+(demo?'/demo-state.json':'/state.json');let serial=Promise.resolve();
-if(demo){try{await readFile(file);}catch(error){if(error.code!=='ENOENT')throw error;const examples=JSON.parse(await readFile('examples/ideas.json','utf8'));const ideas=examples.map(({ageDays,...p})=>({...p,updatedAt:new Date(Date.now()-ageDays*86400000).toISOString(),createdAt:new Date().toISOString(),statusSource:'sync',url:'',threadId:'',history:[]}));await writeFile(file,JSON.stringify({version:2,revision:0,lastSaved:new Date().toISOString(),ideas}));}}
+const demo=values.demo,directory='.local';await mkdir(directory,{recursive:true});
+const file=directory+(demo?`/demo-${language}.json`:'/state.json');let serial=Promise.resolve();
+if(demo){try{await readFile(file);}catch(error){if(error.code!=='ENOENT')throw error;const examples=JSON.parse(await readFile(language==='en'?'examples/ideas.en.json':'examples/ideas.json','utf8'));const ideas=examples.map(({ageDays,...p})=>({...p,updatedAt:new Date(Date.now()-ageDays*86400000).toISOString(),createdAt:new Date().toISOString(),statusSource:'sync',url:'',threadId:'',history:[]}));await writeFile(file,JSON.stringify({version:2,revision:0,lastSaved:new Date().toISOString(),ideas}));}}
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const bucket={async get(){try{const body=await readFile(file,'utf8');return {etag:hash(body),json:async()=>JSON.parse(body)};}catch(e){if(e.code==='ENOENT')return null;throw e;}},put(key,body,options={}){const job=serial.then(async()=>{const old=await bucket.get();if(options.onlyIf?.etagMatches&&old?.etag!==options.onlyIf.etagMatches)return null;if(options.onlyIf?.etagDoesNotMatch==='*'&&old)return null;const temporary=file+'.'+randomUUID()+'.tmp';await writeFile(temporary,body);await rename(temporary,file);return {etag:hash(body)};});serial=job.catch(()=>{});return job;}};
 const port=Number(process.env.PORT||8080);if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORT must be 1–65535');

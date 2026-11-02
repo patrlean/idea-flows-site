@@ -307,3 +307,7 @@ body:has(dialog[open]){overflow:hidden}
 .dev-card{padding-block-end:22px}
 .card-links{align-items:flex-end}
 .card-links>.conversation-actions{flex:1 1 0;min-width:0;flex-wrap:wrap-reverse}
+
+/* English headings use Latin proportions inside the same index column. */
+html[lang="en"] .index h1{font-size:clamp(36px,3.5vw,48px);letter-spacing:-.05em}
+.stat .label{min-width:0}

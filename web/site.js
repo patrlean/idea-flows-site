@@ -1,2 +1,2 @@
 // The build reads site.config.json and replaces this default configuration.
-export const site = /*__SITE_CONFIG__*/ {"title":"Idea Flows","description":"记录想法、调研与作品进展，从构思到交付。","eyebrow":"IDEAS / IN PROGRESS","heading":["项目","索引"],"locale":"zh-CN","timeZone":"UTC"};
+export const site = /*__SITE_CONFIG__*/ {"title":"Idea Flows","language":"en","description":"Ideas, research, and works in progress — from a thought to something shipped.","eyebrow":"IDEAS / IN PROGRESS","heading":["IDEA","INDEX"],"locale":"en-US","timeZone":"UTC"};

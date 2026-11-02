@@ -7,11 +7,24 @@
 
 把想法、调研、开发进展、已上线作品和暂时放下的方向，整理成持续更新的项目索引。可以通过站点自己的 ChatGPT 插件更新，也可以接入 [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook)，同步指定本机 Codex 项目的进展。
 
+## 效果预览
+
+中文界面，使用虚构演示项目。以下截图均拍摄自实际运行的应用。
+
+![中文版 Idea Flows 看板](assets/screenshots/overview.zh-CN.jpg)
+
+<details>
+<summary>归档与恢复</summary>
+
+![中文版归档抽屉与恢复操作](assets/screenshots/archive.zh-CN.jpg)
+
+</details>
+
 ## 最快开始
 
 在可用 **Sites** 的 Codex 或 ChatGPT Work 对话里复制下面这段：
 
-> @Sites 请使用 https://github.com/patrlean/idea-flows-site 作为模板，创建我自己的 Idea Flows 站点。先阅读 AGENTS.md 与 docs/DEPLOY.md，保留现有界面、五种状态、卡片操作和动画。新建属于我的独立站点与存储，首次使用空看板，默认仅我可访问。缺少必要的账户连接时再提示我，其他设置先用模板默认值。运行检查，通过 Sites 正式发布，验证实际网址和 MCP 工具后返回站点链接，并帮助连接本站插件。不要复用模板作者的站点 ID、项目数据或凭据。
+> @Sites 请使用 https://github.com/patrlean/idea-flows-site 作为模板，创建我自己的 Idea Flows 站点。先阅读 AGENTS.md 与 docs/DEPLOY.md，界面使用简体中文（`language: "zh-CN"`），保留现有排版、五种状态、卡片操作和动画。新建属于我的独立站点与存储，首次使用空看板，默认仅我可访问。缺少必要的账户连接时再提示我，其他设置先用模板默认值。运行检查，通过 Sites 正式发布，验证实际网址和 MCP 工具后返回站点链接，并帮助连接本站插件。不要复用模板作者的站点 ID、项目数据或凭据。
 
 也可以先点击 **Use this template → Create a new repository**，再用 Codex 打开自己的仓库。[完整发布指南 →](docs/PUBLISH.zh-CN.md)
 
@@ -27,7 +40,7 @@
 - 🔌 **本机 hook 接收端**：可对接独立开源的 Idea Flows Hook。
 - 🧩 **干净的初始环境**：不含作者的部署标识、个人卡片、聊天记录和凭据。
 
-界面文案为简体中文。中英文文档分开，站点名称、左侧标识、标题分行、日期格式与时区均可调整。
+界面支持简体中文和英文，两个 README 分别使用对应语言的截图。新模板默认英文，可通过 `language` 配置中文；站点名称、左侧标识、标题分行、日期格式与时区均可调整。
 
 ## 本地运行
 
@@ -36,13 +49,13 @@
 ```sh
 git clone https://github.com/patrlean/idea-flows-site.git
 cd idea-flows-site
-npm run dev
+npm run dev:zh
 ```
 
 打开终端输出的本机网址，首次为空看板。要看虚构演示卡片，先停止前一个服务，再运行：
 
 ```sh
-npm run demo
+npm run demo:zh
 ```
 
 自己的本地记录与演示数据分开保存在 `.local/`，不进入 Git 或部署产物。部署产物不含本地记录；新站点从空看板开始，已有站点重新部署时保留云端记录。
@@ -50,18 +63,28 @@ npm run demo
 ## 换成自己的名字
 
 ```sh
-npm run setup -- --title '我的想法' --eyebrow 'MY / IDEAS' --timezone 'Asia/Shanghai'
+npm run setup -- --title '我的想法' --language zh-CN --timezone 'Asia/Shanghai'
 ```
 
-也可以直接编辑 [site.config.json](site.config.json)。`locale` 只控制日期，不会自动翻译界面。
+也可以直接编辑 [site.config.json](site.config.json)。`language` 选择 `zh-CN` 或 `en`；`locale` 只控制日期格式。你自己的项目名称和内容不会被自动翻译。
 
 | 位置 | 用途 |
 | --- | --- |
-| `site.config.json` | 名称、描述、左侧标识、标题、日期格式与时区。 |
+| `site.config.json` | 名称、界面语言、自定义文案、日期格式与时区。 |
 | `.openai/hosting.json` | 存储和 MCP 声明；新建站点后再保存自己的部署 ID。 |
 | `AGENTS.md` | 让 Codex / Sites 理解如何生成和发布站点。 |
 | `docs/DEPLOY.md` | 发布、插件连接、hook 对接与访问边界。 |
-| `examples/ideas.json` | 仅用于本地演示的虚构卡片。 |
+| `examples/ideas.json` / `examples/ideas.en.json` | 仅用于本地演示的中文／英文虚构卡片。 |
+
+### 复现展示截图
+
+```sh
+npm run demo:zh
+# 英文界面与演示内容：
+npm run demo:en
+```
+
+两种语言的演示数据分别保存在忽略的本地文件中。未自定义的标题、描述和左侧标识会随语言切换；显式配置的文案保持原样。
 
 ## 发布为 GPT 站点
 

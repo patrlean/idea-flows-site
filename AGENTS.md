@@ -5,8 +5,8 @@ This repository is a reusable Sites project, not the author's deployed Site. Use
 ## First run
 
 - Read README.md and docs/DEPLOY.md. Node 20+ is the only local prerequisite; no package install or model API key is needed.
-- Read site.config.json for branding, headings, locale, and timezone. Change it to match the user's requested name; do not infer personal facts.
-- `npm run dev` starts an empty board on loopback. `npm run demo` uses fictional local-only examples in separate storage. Never copy `.local/` into a deployment.
+- Read site.config.json for language, branding, headings, date locale, and timezone. Respect the requested UI language: en or zh-CN. New templates default to English; legacy configs without language remain Chinese. Change it to match the user's requested name; do not infer personal facts.
+- `npm run dev` starts an empty board on loopback. `npm run demo:en` and `npm run demo:zh` use localized fictional examples in separate storage. Screenshots in each README must match its language; capture them from the running application rather than editing screenshot text. Never copy `.local/` into a deployment.
 - Run `npm run check` before publication.
 
 ## Create the user's Site

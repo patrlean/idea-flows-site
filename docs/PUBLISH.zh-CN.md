@@ -2,7 +2,7 @@
 
 在启用了 **Sites** 的 Codex 或 ChatGPT Work 对话中复制：
 
-> @Sites 请使用 https://github.com/patrlean/idea-flows-site 作为模板，创建我自己的 Idea Flows 站点。先阅读 AGENTS.md 与 docs/DEPLOY.md，保留现有界面、五种状态、卡片操作和动画。新建属于我的独立站点与存储，首次使用空看板，默认仅我可访问。缺少必要的账户连接时再提示我，其他设置先用模板默认值。运行检查，通过 Sites 正式发布，验证实际网址和 MCP 工具后返回站点链接。不要复用模板作者的站点 ID、项目数据或凭据。
+> @Sites 请使用 https://github.com/patrlean/idea-flows-site 作为模板，创建我自己的 Idea Flows 站点。先阅读 AGENTS.md 与 docs/DEPLOY.md，界面使用简体中文（`language: "zh-CN"`），保留现有排版、五种状态、卡片操作和动画。新建属于我的独立站点与存储，首次使用空看板，默认仅我可访问。缺少必要的账户连接时再提示我，其他设置先用模板默认值。运行检查，通过 Sites 正式发布，验证实际网址和 MCP 工具后返回站点链接。不要复用模板作者的站点 ID、项目数据或凭据。
 
 也可以先在 GitHub 点 **Use this template → Create a new repository**，再用 Codex 打开自己的仓库，输入上面的要求。
 
@@ -13,13 +13,13 @@
 需要 Node.js 20+，没有 npm 依赖，也不需要模型 API Key：
 
 ```sh
-npm run dev
+npm run dev:zh
 ```
 
 打开终端输出的本机网址，首次是空看板。想看虚构演示卡片时，停止前一个进程，再运行：
 
 ```sh
-npm run demo
+npm run demo:zh
 ```
 
 演示数据与自己的本地记录分别存储在 `.local/`，不会进入发布产物。
@@ -27,10 +27,10 @@ npm run demo
 ## 改成自己的样子
 
 ```sh
-npm run setup -- --title '我的想法' --eyebrow 'MY / IDEAS' --timezone 'Asia/Shanghai'
+npm run setup -- --title '我的想法' --language zh-CN --timezone 'Asia/Shanghai'
 ```
 
-也可以直接编辑 `site.config.json`，修改名称、浏览器描述、左侧标识、标题分行和时区。界面文案目前为简体中文；`locale` 只控制日期格式，不是界面语言开关。
+也可以直接编辑 `site.config.json`，修改名称、浏览器描述、左侧标识、标题分行和时区。`language` 可选 `zh-CN` 或 `en`；`locale` 只控制日期格式。未自定义的标题和说明随语言切换，自定义文案与个人项目内容保持原样。
 
 ## 发布和同步
 

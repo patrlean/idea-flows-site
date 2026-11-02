@@ -1,0 +1,7 @@
+[
+  {"id":"demo-live","name":"Reading Index","description":"Turn what you read into a trail you can find again.","progress":"Search and topic tagging are ready.","status":"live","color":"blue","ageDays":2},
+  {"id":"demo-dev","name":"A Little Studio","description":"A small space for making something every day.","progress":"Refining the first set of interactions.","status":"dev","ageDays":4},
+  {"id":"demo-research","name":"City Sound Map","description":"Record a city through sound, starting with capture methods and presentation.","progress":"Compared three approaches; outdoor recording still needs testing.","status":"research","ageDays":8},
+  {"id":"demo-idea","name":"A Desk Garden","description":"A printable desktop model that can grow one piece at a time.","progress":"Just an idea for now.","status":"idea","ageDays":12},
+  {"id":"demo-archived","name":"A Paused Experiment","description":"Keep a trace of a direction explored.","progress":"A fictional demo card, not a real project.","status":"discarded","previousStatus":"idea","ageDays":35}
+]

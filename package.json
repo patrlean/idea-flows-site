@@ -1,17 +1,23 @@
 {
   "name": "idea-flows-site",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "engines": {"node": ">=20"},
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "setup": "node scripts/configure.mjs",
     "build": "node scripts/build.mjs",
-    "dev": "node scripts/build.mjs && node scripts/dev.mjs",
-    "demo": "node scripts/build.mjs && node scripts/dev.mjs --demo",
+    "dev": "node scripts/run-preview.mjs",
+    "demo": "node scripts/run-preview.mjs --demo",
     "test": "node --test",
     "check": "npm test && npm run build && node scripts/validate-artifact.mjs",
-    "check:publish": "node scripts/validate-publish.mjs"
+    "check:publish": "node scripts/validate-publish.mjs",
+    "dev:en": "node scripts/run-preview.mjs --language en",
+    "dev:zh": "node scripts/run-preview.mjs --language zh-CN",
+    "demo:en": "node scripts/run-preview.mjs --demo --language en",
+    "demo:zh": "node scripts/run-preview.mjs --demo --language zh-CN"
   }
 }

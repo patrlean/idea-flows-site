@@ -1,10 +1,13 @@
 import {readFile,mkdir,writeFile,rm} from 'node:fs/promises';
 import {readConfig,html,js} from './config.mjs';
-const config=await readConfig();
+import {parseArgs} from 'node:util';
+import {createTranslator} from '../web/i18n.js';
+const {values}=parseArgs({options:{language:{type:'string'}}});
+const config=await readConfig(process.cwd(),values.language),t=createTranslator(config.language);
 const assets={};
-for(const [name,type] of Object.entries({'index.html':'text/html; charset=utf-8','styles.css':'text/css; charset=utf-8','app.js':'text/javascript; charset=utf-8','data.js':'text/javascript; charset=utf-8','store.js':'text/javascript; charset=utf-8','site.js':'text/javascript; charset=utf-8'})){
+for(const [name,type] of Object.entries({'index.html':'text/html; charset=utf-8','styles.css':'text/css; charset=utf-8','app.js':'text/javascript; charset=utf-8','data.js':'text/javascript; charset=utf-8','store.js':'text/javascript; charset=utf-8','site.js':'text/javascript; charset=utf-8','locale.js':'text/javascript; charset=utf-8','i18n.js':'text/javascript; charset=utf-8'})){
  let body=await readFile('web/'+name,'utf8');
- if(name==='index.html')body=body.replaceAll('__SITE_TITLE__',html(config.title)).replaceAll('__SITE_DESCRIPTION__',html(config.description));
+ if(name==='index.html')body=body.replaceAll('__SITE_TITLE__',html(config.title)).replaceAll('__SITE_DESCRIPTION__',html(config.description)).replaceAll('__LANG__',config.language).replace(/__I18N_(\w+)__/g,(_,key)=>html(t(key)));
  if(name==='site.js')body='export const site = '+js(config)+';\n';
  assets['/'+name]={body,type};
 }

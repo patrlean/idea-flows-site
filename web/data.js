@@ -1,5 +1,6 @@
 import {site} from './site.js';
-export const labels={idea:'想法',research:'调研',dev:'开发中',live:'已上线',discarded:'已归档'};
+import {t} from './locale.js';
+export const labels=Object.fromEntries(['idea','research','dev','live','discarded'].map(key=>[key,t(key)]));
 export function ageDays(idea){return Math.max(0,Math.floor((Date.now()-Date.parse(idea.updatedAt))/86400000));}
 export function dateText(iso){const parts=Object.fromEntries(new Intl.DateTimeFormat(site.locale,{timeZone:site.timeZone,numberingSystem:'latn',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(iso)).map(p=>[p.type,p.value]));return `${parts.year}.${parts.month}.${parts.day}`;}
 export function shortDate(p){return dateText(p.updatedAt).slice(5);}

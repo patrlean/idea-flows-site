@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {codexURL,chatURL,chatGPTURL} from '../web/data.js';
 
 test('existing source chat takes precedence over workspace fallback',()=>{
- const threadId='01a0838e-614c-7150-b953-cb160cd2dc82';
+ const threadId='11111111-2222-4333-8444-555555555555';
  assert.equal(codexURL({threadId,workspacePath:'/example/project'}),`codex://threads/${threadId}`);
 });
 test('a real ChatGPT source opens the web chat and rejects unsafe or unrelated destinations',()=>{
- const uuid='6ae7f45f-9ac0-8191-af20-c9155810df24',chatUrl='https://chatgpt.com/c/'+uuid;
+ const uuid='aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee',chatUrl='https://chatgpt.com/c/'+uuid;
  assert.equal(chatURL({chatUrl,threadId:uuid}),chatUrl);
  assert.equal(chatGPTURL({chatUrl:'https://chatgpt.com/g/g-example/c/'+uuid}),'https://chatgpt.com/g/g-example/c/'+uuid);
  for(const url of ['javascript:alert(1)','https://attacker.test/c/'+uuid,'https://chatgpt.com.attacker.test/c/'+uuid,'https://user@chatgpt.com/c/'+uuid,'https://chatgpt.com/c/not-a-real-id'])assert.equal(chatGPTURL({chatUrl:url}),'');
