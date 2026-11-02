@@ -45,7 +45,7 @@ Open the loopback URL printed in the terminal. The board starts empty. To previe
 npm run demo
 ```
 
-Normal and demo data live in separate ignored `.local/` files. Production builds always start empty and never include either local state file.
+Normal and demo data live in separate ignored `.local/` files. Deployment artifacts never include local/demo records. A newly provisioned Site starts empty; redeploying an existing Site preserves its hosted state.
 
 ## Make it yours
 

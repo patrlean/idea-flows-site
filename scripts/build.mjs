@@ -8,7 +8,7 @@ for(const [name,type] of Object.entries({'index.html':'text/html; charset=utf-8'
  if(name==='site.js')body='export const site = '+js(config)+';\n';
  assets['/'+name]={body,type};
 }
-// Production always starts empty. Demo state is created only by the local dev server.
+// No local data is embedded. Fresh storage starts empty; redeployments retain hosted data.
 const source=(await readFile('worker/index.js','utf8')).replace('/*__ASSETS__*/ {}',JSON.stringify(assets)).replace('/*__PROJECTS__*/ []','[]');
 await rm('dist',{recursive:true,force:true});
 await mkdir('dist/server',{recursive:true});await mkdir('dist/.openai',{recursive:true});
