@@ -1,11 +1,24 @@
 # Idea Flows Site
 
-Your own idea board, built and hosted with ChatGPT Sites.
+Your projects stay up to date while you chat.
 
 [![Use this template](https://img.shields.io/badge/Use_this_template-111827?style=for-the-badge&logo=github)](https://github.com/patrlean/idea-flows-site/generate)
 [![简体中文](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-e5e7eb?style=for-the-badge)](README.zh-CN.md)
 
-Keep ideas, research, work in progress, shipped projects, and archived directions in one editorial project index. Update cards from ChatGPT through the Site's own plugin, or connect the optional [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook) for selected local Codex projects.
+Idea Flows is built around **automatic project status updates**. Discuss an idea, research a question, or build something: the agent in your conversation reads the actual progress, identifies the stage, and updates your board. You do not need to open the board, fill in progress fields, or move cards after each session.
+
+Create your own Site and plugin with ChatGPT Sites, then choose how you work:
+
+- **ChatGPT web chats:** connect your Site's plugin once, then **@mention your Idea Flows plugin** in the conversation you want to sync. Keep chatting; the agent finds existing projects and syncs grounded updates through the plugin. You do not need to call tools or supply status parameters yourself.
+- **Codex:** connect [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook), configure its scope, and trust the hooks once. Work normally in that scope. The active agent determines progress and the Stop hook sends it to your board, without repeated requests to update status.
+
+**Set it up once, then keep working.** The author's local global-hook setup can cover new projects and chats; the current standalone public Hook release still requires directory enrollment and does not include discovery across every directory. Web syncing applies to chats where you @mention your Site's connected plugin, not all your ChatGPT conversations.
+
+## Progress comes from the conversation
+
+Ideas, active research, implementation, and verified delivery drive the corresponding board stages. Continuing a topic updates its existing card. A finished research report is not a launch, and archiving requires your explicit intent.
+
+Card controls are **optional corrections**, not a routine maintenance task. If you explicitly choose a status yourself, subsequent automatic updates respect it.
 
 ## Preview
 
@@ -33,7 +46,7 @@ You need access to Sites in your own account/workspace. Creating a GitHub copy a
 ## What you get
 
 - 🗂️ **Five states** — Idea, research, development, live/completed, and archived.
-- ✏️ **Card controls** — Change status, archive/restore, and associate source chats directly on a card.
+- 🔄 **Automatic progress** — Conversation-driven status updates; card controls are optional corrections, archival, and restoration.
 - ↗️ **Source links** — Open known ChatGPT conversations, local Codex chats/workspaces, and verified project websites.
 - 🎞️ **Motion** — Animated category changes and card movement, with reduced-motion support.
 - 💬 **Your Site's plugin** — Read and update your board through `list_ideas`, `sync_idea`, and `link_idea_chat`.
@@ -101,7 +114,7 @@ New Sites should remain owner-private. Each Site is one shared board: anyone all
 
 ## Connect the hook
 
-The Site plugin is sufficient for ChatGPT updates. For automatic progress from selected local Codex directories, install [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook), then follow [the connection guide](docs/DEPLOY.md#optional-native-codex-hook) to configure **your own** `/api/sync` URL, runtime sync secret, and Sites service access. No credential is included in this template.
+For ChatGPT web updates, connect your Site's plugin once, @mention it in the conversation, and chat normally. The agent handles the synchronization tools. For automatic progress in Codex, install [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook), then follow [the connection guide](docs/DEPLOY.md#optional-native-codex-hook) to configure **your own** `/api/sync` URL, runtime sync secret, and Sites service access. No credential is included in this template.
 
 Both integrations understand `idea`, `research`, `dev`, `live`, and `discarded`. Research completion is not a launch; archiving needs explicit user intent. Manual state takes priority over routine automatic updates.
 
