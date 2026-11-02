@@ -1,9 +1,19 @@
 # Idea Flows Site
 
-Your projects stay up to date while you chat.
+Lay out the work scattered across your AI chats.
 
 [![Use this template](https://img.shields.io/badge/Use_this_template-111827?style=for-the-badge&logo=github)](https://github.com/patrlean/idea-flows-site/generate)
 [![简体中文](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-e5e7eb?style=for-the-badge)](README.zh-CN.md)
+
+## Why Idea Flows exists
+
+Working with AI can mean five windows open at once: one fixing a bug, one building a page, one refactoring a backend, one researching a question, and another exploring an idea that just came to mind. Several tasks move forward together, while your attention keeps switching between them. Each return means finding your place again: the context, the progress, and the next step.
+
+Idea Flows grew out of how disorienting and stressful that switching can feel. It **lays those scattered tasks out in front of you**, so you can see what is still an idea, what is being researched or built, what is finished, and where each task last moved forward. The goal is to help you stay oriented and feel less overwhelmed when working on many things with AI.
+
+Automatic updates serve that goal. You should not have to remember every project's state or maintain another board by hand. Keep chatting and working; Idea Flows keeps an overview you can return to.
+
+## Keep chatting. Status updates automatically.
 
 Idea Flows is built around **automatic project status updates**. Discuss an idea, research a question, or build something: the agent in your conversation reads the actual progress, identifies the stage, and updates your board. You do not need to open the board, fill in progress fields, or move cards after each session.
 
