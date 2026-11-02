@@ -1,11 +1,24 @@
 # Idea Flows Site
 
-用 ChatGPT Sites 生成属于自己的 Idea 看板。
+正常对话，项目状态自动更新。
 
 [![使用此模板](https://img.shields.io/badge/%E4%BD%BF%E7%94%A8%E6%AD%A4%E6%A8%A1%E6%9D%BF-111827?style=for-the-badge&logo=github)](https://github.com/patrlean/idea-flows-site/generate)
 [![English](https://img.shields.io/badge/English-e5e7eb?style=for-the-badge)](README.md)
 
-把想法、调研、开发进展、已上线作品和暂时放下的方向，整理成持续更新的项目索引。可以通过站点自己的 ChatGPT 插件更新，也可以接入 [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook)，同步指定本机 Codex 项目的进展。
+Idea Flows 的核心是**不需要用户手动维护项目状态**。你只需聊想法、做调研、推进项目，当前对话中的 Agent 会根据实际进展，自动识别阶段、生成摘要并同步到看板。无需每次打开看板、新建卡片、填写进度或切换状态。
+
+用 ChatGPT Sites 生成自己的站点和插件，再选择适合你的对话入口：
+
+- **ChatGPT 网页对话**：首次连接本站生成的插件后，在需要同步的对话中 **@你的 Idea Flows 插件**，然后正常聊天。Agent 通过插件读取已有项目并自动同步进展，用户无需手动调用工具或填写状态参数。
+- **Codex**：接入 [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook)，完成一次配置与 hook 信任后，在启用的范围里正常开发即可。每轮进展由当前 Agent 判断，Stop hook 自动发送到看板，无需反复要求“更新状态”。
+
+**启用一次，之后正常对话。** 本机全局 hook 方案可覆盖新项目和新对话；但独立公开的 Hook 当前版本仍需登记目录，并未包含跨所有目录的全局自动发现。网页端只同步已 @本站插件的对话，不监听其他聊天。
+
+## 状态由对话中的事实驱动
+
+随口提出的方向、正在验证的问题、已经开始的实现和已验证的交付，分别形成想法、调研、开发和已上线／完成的进展。同一主题继续推进时更新原卡片。调研报告完成不等于上线，归档需要你明确表达意愿。
+
+卡片上的状态、归档和恢复操作是**可选的纠正入口**，不是日常使用步骤。若手动指定过状态，后续自动同步会尊重该选择。
 
 ## 效果预览
 
@@ -33,7 +46,7 @@
 ## 包含什么
 
 - 🗂️ **五种状态**：想法、调研、开发中、已上线／完成、已归档。
-- ✏️ **卡片内操作**：直接改状态、归档、恢复和关联来源对话。
+- 🔄 **自动进展同步**：通过对话判断和更新状态，无需用户维护；卡片操作仅用于可选纠正、归档与恢复。
 - ↗️ **来源跳转**：打开真实 ChatGPT 对话、本地 Codex 聊天／工作区和已验证的网址。
 - 🎞️ **切换动画**：分类与卡片变化有过渡，尊重减少动态效果设置。
 - 💬 **站点自己的插件**：读取想法、同步进展、补充对话关联。
@@ -101,7 +114,7 @@ npm run check:publish
 
 ## 连接 Codex hook
 
-只用 ChatGPT 更新时，连接站点生成的插件即可。要同步指定本机 Codex 目录，再安装 [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook)，按 [连接指南](docs/DEPLOY.md#optional-native-codex-hook) 配置自己站点的 `/api/sync`、同步密钥和 Sites 服务访问凭据。
+在 ChatGPT 网页端，首次连接站点生成的插件后，在对话中 @该插件并正常交流即可；同步工具由 Agent 自动调用。要在 Codex 中自动记录进展，再安装 [Idea Flows Hook](https://github.com/patrlean/idea-flows-hook)，按 [连接指南](docs/DEPLOY.md#optional-native-codex-hook) 配置自己站点的 `/api/sync`、同步密钥和 Sites 服务访问凭据。
 
 调研完成不等于上线；已上线必须有验证依据；归档需要用户明确指令；手动状态优先。
 
