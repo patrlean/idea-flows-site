@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile,mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {readConfig,html,js} from '../scripts/config.mjs';
+test('hosting declares storage and MCP with an optional newly registered identity',async()=>{const h=JSON.parse(await readFile(new URL('../.openai/hosting.json',import.meta.url),'utf8'));if(h.project_id!==undefined)assert.match(h.project_id,/^appgprj_[a-zA-Z0-9]+$/);assert.equal(h.r2,'BUCKET');assert.deepEqual(h.capabilities,['mcp']);});
+test('branding and code config are escaped rather than interpreted as HTML',()=>{assert.equal(html('<img onerror="x">'),'&lt;img onerror=&quot;x&quot;&gt;');assert.equal(JSON.parse(js({title:'</script><script>x</script>'})).title,'</script><script>x</script>');assert.ok(!js({title:'</script>'}).includes('<'));});
+test('invalid timezone and malformed heading are rejected before building',async()=>{const root=await mkdtemp(join(tmpdir(),'idea-flows-'));try{const original=await readConfig();for(const update of [{timeZone:'not-a-timezone'},{heading:[]},{title:' '}]){await writeFile(join(root,'site.config.json'),JSON.stringify({...original,...update}));await assert.rejects(readConfig(root));}}finally{await rm(root,{recursive:true,force:true});}});
+test('publication guard stops an unregistered template from being published as another site',async()=>{const root=await mkdtemp(join(tmpdir(),'idea-flows-unregistered-'));try{const {mkdir}=await import('node:fs/promises');await mkdir(join(root,'.openai'));await writeFile(join(root,'.openai/hosting.json'),JSON.stringify({r2:'BUCKET',capabilities:['mcp']}));const script=new URL('../scripts/validate-publish.mjs',import.meta.url);const {fileURLToPath}=await import('node:url');const result=spawnSync(process.execPath,[fileURLToPath(script)],{cwd:root,encoding:'utf8'});assert.notEqual(result.status,0);assert.match(result.stderr,/Register your own Site/);}finally{await rm(root,{recursive:true,force:true});}});

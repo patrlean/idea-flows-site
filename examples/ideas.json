@@ -1,0 +1,7 @@
+[
+  {"id":"demo-live","name":"阅读索引","description":"把读过的内容，整理成下一次找得到的线索。","progress":"基础检索与标签整理已完成。","status":"live","color":"blue","ageDays":2},
+  {"id":"demo-dev","name":"小型创作工具","description":"为每天的小作品，留一个轻量的制作空间。","progress":"正在完善第一版交互。","status":"dev","ageDays":4},
+  {"id":"demo-research","name":"城市声音地图","description":"用声音记录一座城市，先研究采集方式与呈现形式。","progress":"比较了三种采集方式，待验证户外录音效果。","status":"research","ageDays":8},
+  {"id":"demo-idea","name":"桌面上的小花园","description":"一个可以打印、组合、慢慢扩展的桌面模型。","progress":"先记下这个想法。","status":"idea","ageDays":12},
+  {"id":"demo-archived","name":"暂时放下的练习","description":"保留曾经探索过的方向。","progress":"这是虚构演示卡片，不代表真实项目。","status":"discarded","previousStatus":"idea","ageDays":35}
+]

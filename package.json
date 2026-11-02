@@ -1,0 +1,17 @@
+{
+  "name": "idea-flows-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=20"},
+  "scripts": {
+    "setup": "node scripts/configure.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && node scripts/dev.mjs",
+    "demo": "node scripts/build.mjs && node scripts/dev.mjs --demo",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm test && npm run build && node scripts/validate-artifact.mjs",
+    "check:publish": "node scripts/validate-publish.mjs"
+  }
+}

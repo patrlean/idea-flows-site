@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.local/
+.site-build/
+.idea-sync/
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
+.openai/local-*.json
