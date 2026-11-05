@@ -37,6 +37,8 @@ test('both built pages serve localized HTML and matching demo content without bu
    const worker=(await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'))).default;
    const page=await(await worker.fetch(new Request('https://board.example/'),{})).text();
    assert.ok(page.includes(`lang="${language}"`));assert.ok(page.includes(createTranslator(language)('linkTitle')));
+   assert.ok(page.includes(createTranslator(language)('chatHelp')));
+   if(language==='en')assert.doesNotMatch(page,/[\u3400-\u9fff]/);
    assert.ok(!page.includes('__I18N_'));
    const config=await(await worker.fetch(new Request('https://board.example/site.js'),{})).text();
    assert.ok(config.includes(`"language":"${language}"`));

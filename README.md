@@ -30,6 +30,10 @@ Ideas, active research, implementation, and verified delivery drive the correspo
 
 Card controls are **optional corrections**, not a routine maintenance task. If you explicitly choose a status yourself, subsequent automatic updates respect it.
 
+Conversation buttons stay **below the short description and above expandable progress**, so opening a card does not move its link. The board reserves scrollbar space to keep column widths stable.
+
+A real ChatGPT URL is reused within the same caller/session when the host supplies session metadata. Later links can fill earlier missing sources without rolling back progress or manual project states. If no real URL is available, `sourceLink.status: "missing"` explicitly reports it; provide the address once through `link_idea_chat`. Anonymous session IDs are never converted into chat URLs. An automatic update carrying a real URL can replace a legacy manual link marker; manual **project status** still takes priority.
+
 ## Preview
 
 English interface with fictional demo projects. Screenshots are captured from the running app.

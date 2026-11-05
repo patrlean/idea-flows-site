@@ -71,3 +71,11 @@ MCP-only use needs no `IDEA_SYNC_SECRET`. The local dev server uses a loopback-o
 A Site is one shared board. Anyone permitted into it has the same board API permissions. Owner-private is the intended initial setting. This starter does not implement independent private boards for visitors to a shared/public Site; add an authorization/data-isolation model before offering that product.
 
 The UI supports English (`en`) and Simplified Chinese (`zh-CN`) through `language` in `site.config.json`. New templates default to English; legacy configurations without a language keep Chinese. Built-in headings and descriptive copy follow the language unless explicitly overridden. `locale` changes date formatting only. Personal project content is never automatically translated.
+
+## Conversation links and session repair
+
+`sync_idea` saves progress even if the current chat URL is unavailable. Its result reports `sourceLink.status` as `linked`, `codex`, or `missing`. On `missing`, obtain the actual ChatGPT address once and call `link_idea_chat`; do not derive a URL from an anonymous `openai/session` value or a Codex thread ID.
+
+When the host includes `params._meta["openai/session"]`, the server hashes it with the authenticated caller ID. A supplied real URL can then be reused for other ideas in that same chat and can repair earlier cards without sources. Other callers/sessions are isolated, and repair does not replace other cards' independently known URLs. Duplicate or older progress events may repair a missing link without changing newer progress or manual project status. This does not discover URLs across all ChatGPT chats or make the shared board a per-user isolated service.
+
+Automatic updates with a known real URL may replace legacy manual link markers. Removing a link clears that association; a later explicit source-bearing update may associate it again. Manual lifecycle states remain authoritative.

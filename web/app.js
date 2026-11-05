@@ -4,6 +4,7 @@ import {labels,ageDays,dateText,shortDate,chatURL,chatGPTURL} from './data.js';
 import {load,fetchState,changeStatus,changeChatLink,cache} from './store.js';
 let state=load(),filter='all',transition=null,toastTimer,pollBusy=false;
 const pending=new Set(),board=document.querySelector('#board'),drawer=document.querySelector('#drawer');
+const openOverviewCards=new Set();
 const linkEditor=document.querySelector('#chat-link-editor'),linkInput=document.querySelector('#chat-link-url'),linkError=document.querySelector('#chat-link-error');
 let linkingId=null,linkOrigin=null,linkSaving=false;
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -20,10 +21,32 @@ function projectLinks(p){return `<div class="card-links">${conversationActions(p
 function heading(p){const href=chatURL(p);return href?`<a class="card-heading" href="${esc(href)}" ${codexTarget} title="${esc(t('openProject',{app:chatGPTURL(p)?'ChatGPT':'Codex',name:p.name}))}">${esc(p.name)}<svg class="codex-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>`:`<span class="card-heading">${esc(p.name)}</span>`;}
 function statusControl(p){return `<div class="status-control"><button class="status-trigger" data-menu="${esc(p.id)}" aria-expanded="false" aria-controls="menu-${esc(p.id)}" aria-label="${esc(t('changeState',{name:p.name,status:statusLabel(p)}))}"><span class="status-dot ${p.status}"></span>${statusLabel(p)}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button><div class="status-menu" id="menu-${esc(p.id)}" aria-label="${esc(t('stateOptions',{name:p.name}))}">${Object.entries(labels).filter(([key])=>key!==p.status).map(([key,label])=>`<button data-status="${key}" data-id="${esc(p.id)}" ${pending.has(p.id)?'disabled':''}><span class="status-dot ${key}"></span>${key==='discarded'?t('archive'):label}</button>`).join('')}</div></div>`;}
 const attributes=p=>`data-idea="${esc(p.id)}" style="view-transition-name:${nameFor(p.id)}"`;
-function liveCard(p){return `<article class="live-card ${p.color==='blue'?'blue':''}" ${attributes(p)}><div class="card-top status-row">${statusControl(p)}<span class="mono">${esc(dateText(p.updatedAt).slice(0,7))}</span></div><h2>${heading(p)}</h2><p>${esc(p.description)}</p><p class="progress">${esc(p.progress)}</p>${projectLinks(p)}</article>`;}
-function devCard(p){const d=ageDays(p),level=d<=3?5:d<=10?4:d<=21?3:d<=35?2:1,tone=d<=3?'':d<=14?'warm':d<=30?'cool':'stale';return `<article class="dev-card ${tone}" ${attributes(p)}><div class="dev-meta status-row">${statusControl(p)}<div class="age-actions"><span class="ago">${t(d<=14?'updatedAgo':'inactiveDays',{days:d})}</span>${d>30?`<button class="quick-archive" data-id="${esc(p.id)}" data-status="discarded" aria-label="${esc(t('archiveProject',{name:p.name}))}">${t('archive')} <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10v8H3zM2 2h12v3H2zM6 8h4"/></svg></button>`:''}</div></div><h3>${heading(p)}</h3><p>${esc(p.description)}</p><p class="progress">${t('workingOn')}${esc(p.progress||t('waitingUpdate'))}</p><div class="card-bottom"><div class="bars" role="img" aria-label="${t('activity',{level})}">${[0,1,2,3,4].map(k=>`<span class="${k<level?'on':''}"></span>`).join('')}</div>${projectLinks(p)}</div></article>`;}
+function liveCard(p){return `<article class="live-card ${p.color==='blue'?'blue':''}" ${attributes(p)}><div class="card-top status-row">${statusControl(p)}<span class="mono">${esc(dateText(p.updatedAt).slice(0,7))}</span></div><h2>${heading(p)}</h2><p>${esc(p.description)}</p>${projectLinks(p)}<p class="progress">${esc(p.progress)}</p></article>`;}
+function devCard(p){const d=ageDays(p),level=d<=3?5:d<=10?4:d<=21?3:d<=35?2:1,tone=d<=3?'':d<=14?'warm':d<=30?'cool':'stale';return `<article class="dev-card ${tone}" ${attributes(p)}><div class="dev-meta status-row">${statusControl(p)}<div class="age-actions"><span class="ago">${t(d<=14?'updatedAgo':'inactiveDays',{days:d})}</span>${d>30?`<button class="quick-archive" data-id="${esc(p.id)}" data-status="discarded" aria-label="${esc(t('archiveProject',{name:p.name}))}">${t('archive')} <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10v8H3zM2 2h12v3H2zM6 8h4"/></svg></button>`:''}</div></div><h3>${heading(p)}</h3><p>${esc(p.description)}</p>${projectLinks(p)}<p class="progress">${t('workingOn')}${esc(p.progress||t('waitingUpdate'))}</p><div class="card-bottom"><div class="bars" role="img" aria-label="${t('activity',{level})}">${[0,1,2,3,4].map(k=>`<span class="${k<level?'on':''}"></span>`).join('')}</div></div></article>`;}
 function ideaCard(p){return `<article class="idea-tile" ${attributes(p)}><div class="idea-top status-row">${statusControl(p)}<span class="idea-date">${esc(shortDate(p))}</span></div><h3 class="idea-name">${heading(p)}</h3><p class="idea-description">${esc(p.description)}</p>${projectLinks(p)}</article>`;}
-function researchCard(p){return `<article class="research-card" ${attributes(p)}><div class="idea-top status-row">${statusControl(p)}<span class="idea-date">${esc(shortDate(p))}</span></div><h3>${heading(p)}</h3><p>${esc(p.description)}</p><p class="progress">${t('researchProgress')}${esc(p.progress||t('researchPending'))}</p>${projectLinks(p)}</article>`;}
+function researchCard(p){return `<article class="research-card" ${attributes(p)}><div class="idea-top status-row">${statusControl(p)}<span class="idea-date">${esc(shortDate(p))}</span></div><h3>${heading(p)}</h3><p>${esc(p.description)}</p>${projectLinks(p)}<p class="progress">${t('researchProgress')}${esc(p.progress||t('researchPending'))}</p></article>`;}
+function foldOverviewCards(){
+ if(filter!=='all')return;
+ board.querySelectorAll('section').forEach(section=>{
+  const cards=[...section.querySelectorAll(':scope > article')],compact=cards.length>=2;
+  if(compact)section.classList.add('compact-section');
+  cards.forEach(card=>{
+   if(compact)card.classList.add('compact-card');
+   const id=card.dataset.idea,title=card.querySelector(':scope > h2,:scope > h3'),description=card.querySelector(':scope > p:not(.progress)'),progress=card.querySelector(':scope > .progress');
+   if(!progress)return;
+   const details=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('div'),inner=document.createElement('div');
+   details.className='overview-disclosure';details.open=openOverviewCards.has(id);summary.className='overview-summary';
+   const copy=document.createElement('div');copy.className='overview-summary-copy';card.insertBefore(details,title);copy.append(title);if(description)copy.append(description);const links=card.querySelector(':scope > .card-links');if(links)copy.append(links);summary.append(copy);
+   summary.insertAdjacentHTML('beforeend','<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>');
+   body.className='overview-details';inner.className='overview-details-inner';inner.append(progress);body.append(inner);details.append(summary,body);
+   const closeOnLeave=()=>{if(!card.contains(document.activeElement))details.open=false;};
+   card.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')details.open=true;});
+   card.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')closeOnLeave();});
+   card.addEventListener('focusout',e=>{if(!card.contains(e.relatedTarget)&&!card.matches(':hover')&&matchMedia('(hover:hover)').matches)details.open=false;});
+   details.addEventListener('toggle',()=>{if(card.isConnected){if(details.open)openOverviewCards.add(id);else openOverviewCards.delete(id);}});
+  });
+ });
+}
 function render(){
  const live=state.ideas.filter(p=>p.status==='live'),dev=state.ideas.filter(p=>p.status==='dev'),research=state.ideas.filter(p=>p.status==='research'),ideas=state.ideas.filter(p=>p.status==='idea'),archived=state.ideas.filter(p=>p.status==='discarded');
  board.classList.toggle('filtered',filter!=='all');
@@ -34,7 +57,7 @@ function render(){
  ${(filter==='all'&&research.length)||filter==='research'?`<section class="research-section" aria-label="${labels.research}">${research.length?research.map(researchCard).join(''):`<div class="empty">${t('emptyResearch')}</div>`}</section>`:''}
  ${(filter==='all'&&ideas.length)||filter==='idea'?`<section class="ideas-section ${ideas.length===1?'single':''}" aria-label="${t('ideasFilter')}"><div class="idea-title"><h2>${t('ideasFilter')}</h2></div>${ideas.length?ideas.map(ideaCard).join(''):`<div class="empty">${t('emptyIdeas')}</div>`}</section>`:''}
  ${filter==='all'&&!live.length&&!dev.length&&!research.length&&!ideas.length?`<div class="empty board-empty">${t('emptyBoard')}</div>`:''}`;
- if(drawer.open)renderDrawer();
+ foldOverviewCards();if(drawer.open)renderDrawer();
 }
 function renderDrawer(){const list=state.ideas.filter(p=>p.status==='discarded');document.querySelector('#discarded-list').innerHTML=list.length?list.map(p=>`<article class="discarded-item" ${attributes(p)}><div class="drawer-card-top status-row">${statusControl(p)}<span class="mono">${esc(shortDate(p))}</span></div><h3>${heading(p)}</h3><p>${esc(p.progress)}</p><div class="card-links">${conversationActions(p)}${siteLink(p)}<button class="restore-button" data-status="${esc(p.previousStatus||'idea')}" data-id="${esc(p.id)}">${t('restore')}</button></div></article>`).join(''):`<div class="empty">${t('emptyArchive')}</div>`;}
 function toast(message){const el=document.querySelector('#toast');clearTimeout(toastTimer);el.textContent=message;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),4000);}
@@ -67,7 +90,7 @@ function handleClick(e){
  const link=e.target.closest('[data-link-chat]');if(link){openChatLink(link);return;}
  const choice=e.target.closest('[data-status]');if(choice){setStatus(choice.dataset.id,choice.dataset.status);return;}
  const menu=e.target.closest('[data-menu]');if(menu){const control=menu.closest('.status-control');control.classList.add('menu-open');menu.setAttribute('aria-expanded','true');return;}
- const control=e.target.closest('[data-filter]');if(control){filter=filter===control.dataset.filter?'all':control.dataset.filter;repaint(filter);return;}
+ const control=e.target.closest('[data-filter]');if(control){filter=filter===control.dataset.filter?'all':control.dataset.filter;openOverviewCards.clear();repaint(filter);return;}
  if(e.target.closest('#open-drawer')){renderDrawer();drawer.showModal();}
 }
 function placeChatLink(){

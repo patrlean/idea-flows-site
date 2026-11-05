@@ -6,7 +6,9 @@ button,input,textarea{font:inherit}
 button,a{-webkit-tap-highlight-color:transparent}
 button{color:inherit;cursor:pointer;touch-action:manipulation}
 ::selection{background:var(--yellow);color:var(--ink)}
-html{scrollbar-color:#a6a39b var(--paper);scrollbar-width:thin}
+/* Reserve vertical scrollbar space so expanding cards cannot shrink columns. */
+html{scrollbar-color:#a6a39b var(--paper);scrollbar-width:thin;scrollbar-gutter:stable}
+@supports not (scrollbar-gutter:stable){html{overflow-y:scroll}}
 input,textarea{caret-color:var(--ink)}
 button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:5px}
 button{border-radius:0}
@@ -311,3 +313,31 @@ body:has(dialog[open]){overflow:hidden}
 /* English headings use Latin proportions inside the same index column. */
 html[lang="en"] .index h1{font-size:clamp(36px,3.5vw,48px);letter-spacing:-.05em}
 .stat .label{min-width:0}
+
+/* Overview stacks stay compact when a category has several projects. */
+.board:not(.filtered) .compact-section{min-height:0;grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-rows:auto;align-content:start;align-self:start}
+.compact-section .idea-title{min-height:72px}
+.board .compact-card{display:flex;flex-direction:column;gap:12px;min-height:0;min-width:0;padding:20px 20px 24px}
+.board .dev-card.compact-card{padding:18px 18px 22px}
+.overview-summary{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;min-height:44px}
+.overview-summary::-webkit-details-marker{display:none}
+.overview-summary-copy{flex:1;min-width:0}
+.overview-summary .codex-arrow{display:none}
+.overview-summary-copy>p{margin:12px 0 0}
+.board:not(.filtered) .compact-card .overview-summary :is(h2,h3),.board .compact-card>.idea-name{margin:0;padding:4px 0;min-width:0;font-size:24px;font-weight:700;line-height:1.25;letter-spacing:-.02em;overflow-wrap:anywhere}
+.board .compact-card .overview-summary-copy>p{font-size:13px;line-height:1.7}
+.overview-summary>svg{width:16px;height:16px;margin-top:10px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;transition:transform .42s cubic-bezier(.42,0,.58,1)}
+.live-card:not(.compact-card) .overview-summary>svg{margin-top:42px}
+.dev-card:not(.compact-card) .overview-summary>svg,.research-card:not(.compact-card) .overview-summary>svg{margin-top:34px}
+.overview-disclosure[open]>.overview-summary>svg{transform:rotate(180deg)}
+.overview-summary:focus-visible{outline:3px solid var(--blue);outline-offset:5px}
+.live-card.blue .overview-summary:focus-visible{outline-color:var(--yellow)}
+.overview-details-inner{display:flex;flex-direction:column;gap:12px;min-width:0;padding-top:16px}
+.overview-disclosure::details-content{interpolate-size:allow-keywords;block-size:0;overflow:clip;transition:block-size .42s cubic-bezier(.42,0,.58,1),content-visibility .42s;transition-behavior:allow-discrete}
+.overview-disclosure[open]::details-content{block-size:auto}
+@media(prefers-reduced-motion:reduce){.overview-disclosure::details-content{transition:none}.overview-summary>svg{transition:none}}
+
+/* Source links belong to the fixed summary, above expanding progress. Never
+   let flex auto margins push the pointer target to the bottom of the card. */
+.board article>.card-links{margin-top:0}
+.overview-summary-copy>.card-links{margin-top:12px}
